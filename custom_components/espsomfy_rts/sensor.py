@@ -56,7 +56,7 @@ async def async_setup_entry(
                     icon="mdi:cpu-32-bit",
                 ),
                 data=cfg,
-            )
+            ),
         )
     if "connType" in cfg:
         new_entities.append(
@@ -71,11 +71,11 @@ async def async_setup_entry(
                     icon="mdi:connection",
                 ),
                 data=cfg,
-            )
+            ),
         )
         if cfg["connType"] == "Wifi":
             new_entities.append(
-                ESPSomfyWifiStrengthSensor(controller, controller.api.get_config())
+                ESPSomfyWifiStrengthSensor(controller, controller.api.get_config()),
             )
             new_entities.append(
                 ESPSomfyDiagSensor(
@@ -88,7 +88,7 @@ async def async_setup_entry(
                         events={EVT_WIFISTRENGTH: "ssid"},
                     ),
                     data=controller.api.get_config(),
-                )
+                ),
             )
             new_entities.append(
                 ESPSomfyDiagSensor(
@@ -102,7 +102,7 @@ async def async_setup_entry(
                         events={EVT_WIFISTRENGTH: "channel"},
                     ),
                     data=controller.api.get_config(),
-                )
+                ),
             )
         elif cfg["connType"] == "Ethernet":
             new_entities.append(
@@ -118,7 +118,7 @@ async def async_setup_entry(
                         events={EVT_ETHERNET: "speed"},
                     ),
                     data=controller.api.get_config(),
-                )
+                ),
             )
             new_entities.append(
                 ESPSomfyDiagSensor(
@@ -131,7 +131,7 @@ async def async_setup_entry(
                         events={EVT_ETHERNET: "fullduplex"},
                     ),
                     data=controller.api.get_config(),
-                )
+                ),
             )
 
     new_entities.append(
@@ -146,7 +146,7 @@ async def async_setup_entry(
                 native_value=controller.api.get_data()["host"],
             ),
             data=controller.api.get_config(),
-        )
+        ),
     )
 
     if new_entities:
@@ -157,7 +157,7 @@ class ESPSomfyDiagSensor(ESPSomfyEntity, SensorEntity):
     """A diagnostic entity for the hub"""
 
     def __init__(
-        self, controller: ESPSomfyController, cfg: ESPSomfyDiagSensorDescription, data
+        self, controller: ESPSomfyController, cfg: ESPSomfyDiagSensorDescription, data,
     ) -> None:
         super().__init__(controller=controller, data=data)
         self._controller = controller

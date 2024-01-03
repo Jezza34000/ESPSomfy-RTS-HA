@@ -69,23 +69,23 @@ ALLOWED_COMMAND = [
 ]
 
 POSITION_SERVICE_SCHEMA: Final = make_entity_service_schema(
-    {vol.Required(ATTR_POSITION): vol.All(vol.Coerce(int), vol.Range(min=0, max=100))}
+    {vol.Required(ATTR_POSITION): vol.All(vol.Coerce(int), vol.Range(min=0, max=100))},
 )
 TILT_POSITION_SERVICE_SCHEMA: Final = make_entity_service_schema(
     {
         vol.Required(ATTR_TILT_POSITION): vol.All(
-            vol.Coerce(int), vol.Range(min=0, max=100)
-        )
-    }
+            vol.Coerce(int), vol.Range(min=0, max=100),
+        ),
+    },
 )
 SUNNY_SERVICE_SCHEMA: Final = make_entity_service_schema(
-    {vol.Required(ATTR_SUNNY): vol.All(vol.Coerce(bool))}
+    {vol.Required(ATTR_SUNNY): vol.All(vol.Coerce(bool))},
 )
 WINDY_SERVICE_SCHEMA: Final = make_entity_service_schema(
-    {vol.Required(ATTR_WINDY): vol.All(vol.Coerce(bool))}
+    {vol.Required(ATTR_WINDY): vol.All(vol.Coerce(bool))},
 )
 SEND_COMMAND_SERVICE_SCHEMA: Final = make_entity_service_schema(
-    {vol.Required(ATTR_COMMAND): vol.In(ALLOWED_COMMAND)}
+    {vol.Required(ATTR_COMMAND): vol.In(ALLOWED_COMMAND)},
 )
 
 
@@ -113,7 +113,7 @@ async def async_setup_entry(
     for group in controller.api.groups:
         try:
             new_groups.append(
-                ESPSomfyGroup(hass=hass, controller=controller, data=group)
+                ESPSomfyGroup(hass=hass, controller=controller, data=group),
             )
         except KeyError:
             pass
@@ -137,7 +137,7 @@ async def async_setup_entry(
     platform.async_register_entity_service(SVC_TILT_OPEN, {}, "async_tilt_open")
     platform.async_register_entity_service(SVC_TILT_CLOSE, {}, "async_tilt_close")
     platform.async_register_entity_service(
-        SVC_SET_CURRENT_POS, POSITION_SERVICE_SCHEMA, "async_set_current_position"
+        SVC_SET_CURRENT_POS, POSITION_SERVICE_SCHEMA, "async_set_current_position",
     )
     platform.async_register_entity_service(
         SVC_SET_CURRENT_TILT_POS,
@@ -145,13 +145,13 @@ async def async_setup_entry(
         "async_set_current_tilt_position",
     )
     platform.async_register_entity_service(
-        SVC_SET_SUNNY, SUNNY_SERVICE_SCHEMA, "async_set_sunny"
+        SVC_SET_SUNNY, SUNNY_SERVICE_SCHEMA, "async_set_sunny",
     )
     platform.async_register_entity_service(
-        SVC_SET_WINDY, WINDY_SERVICE_SCHEMA, "async_set_windy"
+        SVC_SET_WINDY, WINDY_SERVICE_SCHEMA, "async_set_windy",
     )
     platform.async_register_entity_service(
-        SVC_SEND_COMMAND, SEND_COMMAND_SERVICE_SCHEMA, "async_send_command"
+        SVC_SEND_COMMAND, SEND_COMMAND_SERVICE_SCHEMA, "async_send_command",
     )
 
 
@@ -159,7 +159,7 @@ class ESPSomfyGroup(CoverGroup, ESPSomfyEntity):
     """A grpi[] that is associated with a controller"""
 
     def __init__(
-        self, hass: HomeAssistant, controller: ESPSomfyController, data
+        self, hass: HomeAssistant, controller: ESPSomfyController, data,
     ) -> None:
         ESPSomfyEntity.__init__(self=self, controller=controller, data=data)
         self._hass = hass
@@ -177,7 +177,7 @@ class ESPSomfyGroup(CoverGroup, ESPSomfyEntity):
         entities = entity_registry.async_get(hass)
         shade_ids: list[str] = []
         for entity in async_entries_for_config_entry(
-            entities, self._controller.config_entry_id
+            entities, self._controller.config_entry_id,
         ):
             for cover_id in self._linked_shade_ids:
                 if entity.unique_id == f"{self._controller.unique_id}_{cover_id}":
@@ -190,7 +190,7 @@ class ESPSomfyGroup(CoverGroup, ESPSomfyEntity):
         entities = entity_registry.async_get(self._hass)
         shade_ids: list[str] = []
         for entity in async_entries_for_config_entry(
-            entities, self._controller.config_entry_id
+            entities, self._controller.config_entry_id,
         ):
             for cover_id in self._linked_shade_ids:
                 if entity.unique_id == f"{self._controller.unique_id}_{cover_id}":
@@ -355,7 +355,7 @@ class ESPSomfyShade(ESPSomfyEntity, CoverEntity):
                         ] = self._controller.data["remoteAddress"]
                     if "flipPosition" in self._controller.data:
                         self._flip_position = bool(
-                            self._controller.data["flipPosition"]
+                            self._controller.data["flipPosition"],
                         )
                     if "position" in self._controller.data:
                         self._position = int(self._controller.data["position"])
@@ -376,27 +376,27 @@ class ESPSomfyShade(ESPSomfyEntity, CoverEntity):
                     if self._has_tilt is True:
                         if "tiltDirection" in self._controller.data:
                             self._tilt_direction = int(
-                                self._controller.data["tiltDirection"]
+                                self._controller.data["tiltDirection"],
                             )
                         if "tiltPosition" in self._controller.data:
                             self._tilt_position = int(
-                                self._controller.data["tiltPosition"]
+                                self._controller.data["tiltPosition"],
                             )
                         if "tiltTarget" in self._controller.data:
                             self._state_attributes["tilt_target"] = int(
-                                self._controller.data["tiltTarget"]
+                                self._controller.data["tiltTarget"],
                             )
                         if "myTiltPos" in self._controller.data:
                             self._state_attributes["my_tilt_pos"] = int(
-                                self._controller.data["myTiltPos"]
+                                self._controller.data["myTiltPos"],
                             )
                     if "target" in self._controller.data:
                         self._state_attributes["position_target"] = int(
-                            self._controller.data["target"]
+                            self._controller.data["target"],
                         )
                     if "mypos" in self._controller.data:
                         self._state_attributes["my_pos"] = int(
-                            self._controller.data["mypos"]
+                            self._controller.data["mypos"],
                         )
 
                     self._available = True
@@ -420,7 +420,7 @@ class ESPSomfyShade(ESPSomfyEntity, CoverEntity):
                             "sourceAddress"
                         ]
                     self._state_attributes["cmd_fired"] = dt_util.as_timestamp(
-                        dt_util.utcnow()
+                        dt_util.utcnow(),
                     )
                     bus_data = {
                         "entity_id": self.entity_id,
@@ -428,7 +428,7 @@ class ESPSomfyShade(ESPSomfyEntity, CoverEntity):
                         "name": self.name,
                         "source": self._state_attributes.get("cmd_source", ""),
                         "remote_address": self._state_attributes.get(
-                            "remote_address", 0
+                            "remote_address", 0,
                         ),
                         "source_address": self._state_attributes.get("cmd_address", 0),
                         "command": self._state_attributes.get("last_cmd", ""),
@@ -558,11 +558,11 @@ class ESPSomfyShade(ESPSomfyEntity, CoverEntity):
         """Set the tilt postion"""
         if self._flip_position is True:
             await self._controller.api.position_tilt(
-                self._shade_id, int(kwargs[ATTR_TILT_POSITION])
+                self._shade_id, int(kwargs[ATTR_TILT_POSITION]),
             )
         else:
             await self._controller.api.position_tilt(
-                self._shade_id, 100 - int(kwargs[ATTR_TILT_POSITION])
+                self._shade_id, 100 - int(kwargs[ATTR_TILT_POSITION]),
             )
 
     async def async_open_cover_tilt(self, **kwargs: Any) -> None:
@@ -582,20 +582,20 @@ class ESPSomfyShade(ESPSomfyEntity, CoverEntity):
         if self._flip_position is True:
             if self._attr_device_class == CoverDeviceClass.AWNING:
                 await self._controller.api.position_shade(
-                    self._shade_id, 100 - int(kwargs[ATTR_POSITION])
+                    self._shade_id, 100 - int(kwargs[ATTR_POSITION]),
                 )
             else:
                 await self._controller.api.position_shade(
-                    self._shade_id, int(kwargs[ATTR_POSITION])
+                    self._shade_id, int(kwargs[ATTR_POSITION]),
                 )
         else:
             if self._attr_device_class == CoverDeviceClass.AWNING:
                 await self._controller.api.position_shade(
-                    self._shade_id, int(kwargs[ATTR_POSITION])
+                    self._shade_id, int(kwargs[ATTR_POSITION]),
                 )
             else:
                 await self._controller.api.position_shade(
-                    self._shade_id, 100 - int(kwargs[ATTR_POSITION])
+                    self._shade_id, 100 - int(kwargs[ATTR_POSITION]),
                 )
 
     async def async_open_cover(self, **kwargs: Any) -> None:
@@ -626,26 +626,26 @@ class ESPSomfyShade(ESPSomfyEntity, CoverEntity):
         if self._flip_position is True:
             if self._attr_device_class == CoverDeviceClass.AWNING:
                 await self._controller.api.set_current_position(
-                    self._shade_id, 100 - int(kwargs[ATTR_POSITION])
+                    self._shade_id, 100 - int(kwargs[ATTR_POSITION]),
                 )
             else:
                 await self._controller.api.set_current_position(
-                    self._shade_id, int(kwargs[ATTR_POSITION])
+                    self._shade_id, int(kwargs[ATTR_POSITION]),
                 )
         else:
             if self._attr_device_class == CoverDeviceClass.AWNING:
                 await self._controller.api.set_current_position(
-                    self._shade_id, int(kwargs[ATTR_POSITION])
+                    self._shade_id, int(kwargs[ATTR_POSITION]),
                 )
             else:
                 await self._controller.api.set_current_position(
-                    self._shade_id, 100 - int(kwargs[ATTR_POSITION])
+                    self._shade_id, 100 - int(kwargs[ATTR_POSITION]),
                 )
 
     async def async_set_current_tilt_position(self, **kwargs: Any) -> None:
         """Sets the current position for the device without moving it"""
         await self._controller.api.set_current_tilt_position(
-            self._shade_id, int(kwargs[ATTR_TILT_POSITION])
+            self._shade_id, int(kwargs[ATTR_TILT_POSITION]),
         )
 
     async def async_set_sunny(self, **kwargs: Any) -> None:

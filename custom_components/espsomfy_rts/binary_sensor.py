@@ -86,7 +86,7 @@ class ESPSomfySunSensor(ESPSomfyEntity, BinarySensorEntity):
             and "flags" in self._controller.data
         ):
             self._attr_is_on = bool(
-                (int(self._controller.data["flags"]) & 0x20) == 0x20
+                (int(self._controller.data["flags"]) & 0x20) == 0x20,
             )
             self.async_write_ha_state()
         elif (
@@ -97,7 +97,7 @@ class ESPSomfySunSensor(ESPSomfyEntity, BinarySensorEntity):
             and "flags" in self._controller.data
         ):
             self._attr_is_on = bool(
-                (int(self._controller.data["flags"]) & 0x20) == 0x20
+                (int(self._controller.data["flags"]) & 0x20) == 0x20,
             )
             self.async_write_ha_state()
 
@@ -155,7 +155,7 @@ class ESPSomfyWindSensor(ESPSomfyEntity, BinarySensorEntity):
             and "flags" in self._controller.data
         ):
             self._attr_is_on = bool(
-                (int(self._controller.data["flags"]) & 0x10) == 0x10
+                (int(self._controller.data["flags"]) & 0x10) == 0x10,
             )
             self.async_write_ha_state()
         elif (
@@ -166,7 +166,7 @@ class ESPSomfyWindSensor(ESPSomfyEntity, BinarySensorEntity):
             and "flags" in self._controller.data
         ):
             self._attr_is_on = bool(
-                (int(self._controller.data["flags"]) & 0x10) == 0x10
+                (int(self._controller.data["flags"]) & 0x10) == 0x10,
             )
             self.async_write_ha_state()
 

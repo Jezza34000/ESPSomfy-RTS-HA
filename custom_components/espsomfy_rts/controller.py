@@ -58,7 +58,7 @@ class SocketListener(threading.Thread):
     """A listener of sockets."""
 
     def __init__(
-        self, hass: HomeAssistant, url: str, onpacket, onopen, onclose, onerror
+        self, hass: HomeAssistant, url: str, onpacket, onopen, onclose, onerror,
     ) -> None:
         """Initialize a new socket listener"""
         super().__init__()
@@ -131,17 +131,17 @@ class SocketListener(threading.Thread):
             self.connected = True
         except websocket.WebSocketAddressException:
             self._connect_timer = Timer(
-                min(10 * self.reconnects / 2, 20), self.reconnect
+                min(10 * self.reconnects / 2, 20), self.reconnect,
             )
             self._connect_timer.start()
         except websocket.WebSocketTimeoutException:
             self._connect_timer = Timer(
-                min(10 * self.reconnects / 2, 20), self.reconnect
+                min(10 * self.reconnects / 2, 20), self.reconnect,
             )
             self._connect_timer.start()
         except websocket.WebSocketConnectionClosedException:
             self._connect_timer = Timer(
-                min(10 * self.reconnects / 2, 20), self.reconnect
+                min(10 * self.reconnects / 2, 20), self.reconnect,
             )
             self._connect_timer.start()
 
@@ -270,7 +270,7 @@ class ESPSomfyController(DataUpdateCoordinator):
                 EVT_UPDPROGRESS,
                 EVT_WIFISTRENGTH,
                 EVT_ETHERNET,
-            ]
+            ],
         )
         await self.ws_listener.connect()
 
@@ -673,13 +673,13 @@ class ESPSomfyAPI:
     async def set_current_position(self, shade_id: int, position: int):
         """Sets the current position without moving the motor"""
         await self.put_command(
-            API_SETPOSITIONS, {"shadeId": shade_id, "position": position}
+            API_SETPOSITIONS, {"shadeId": shade_id, "position": position},
         )
 
     async def set_current_tilt_position(self, shade_id: int, tilt_position: int):
         """Sets the current position without moving the motor"""
         await self.put_command(
-            API_SETPOSITIONS, {"shadeId": shade_id, "tiltPosition": tilt_position}
+            API_SETPOSITIONS, {"shadeId": shade_id, "tiltPosition": tilt_position},
         )
 
     async def set_sunny(self, shade_id: int, sunny: bool):
@@ -702,7 +702,7 @@ class ESPSomfyAPI:
         """Log in to EPSSomfy device"""
         if self._canLogin:
             async with self._session.put(
-                f"{self._api_url}{API_LOGIN}", json=data
+                f"{self._api_url}{API_LOGIN}", json=data,
             ) as resp:
                 if resp.status == 200:
                     data = await resp.json()
@@ -726,7 +726,7 @@ class ESPSomfyAPI:
     async def group_command(self, data):
         """Send commands to ESPSomfyRTS via PUT request"""
         async with self._session.put(
-            f"{self._api_url}{API_GROUPCOMMAND}", json=data
+            f"{self._api_url}{API_GROUPCOMMAND}", json=data,
         ) as resp:
             if resp.status == 200:
                 pass
@@ -736,7 +736,7 @@ class ESPSomfyAPI:
     async def tilt_command(self, data):
         """Send commands to ESPSomfyRTS via PUT request"""
         async with self._session.put(
-            f"{self._api_url}{API_TILTCOMMAND}", json=data
+            f"{self._api_url}{API_TILTCOMMAND}", json=data,
         ) as resp:
             if resp.status == 200:
                 pass

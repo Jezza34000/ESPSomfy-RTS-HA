@@ -27,18 +27,18 @@ async def async_setup_entry(
                 int(shade["shadeType"]) == 9 or int(shade["shadeType"] == 10)
             ):
                 new_entities.append(
-                    ESPSomfyBinarySwitch(controller=controller, data=shade)
+                    ESPSomfyBinarySwitch(controller=controller, data=shade),
                 )
             elif "sunSensor" in shade:
                 if shade["sunSensor"] is True:
                     new_entities.append(
-                        ESPSomfySunSwitch(controller=controller, data=shade)
+                        ESPSomfySunSwitch(controller=controller, data=shade),
                     )
             elif "shadeType" in shade:
                 match (shade["shadeType"]):
                     case 3:
                         new_entities.append(
-                            ESPSomfySunSwitch(controller=controller, data=shade)
+                            ESPSomfySunSwitch(controller=controller, data=shade),
                         )
         except KeyError:
             pass
@@ -48,7 +48,7 @@ async def async_setup_entry(
             if "sunSensor" in group:
                 if group["sunSensor"] is True:
                     new_entities.append(
-                        ESPSomfySunSwitch(controller=controller, data=group)
+                        ESPSomfySunSwitch(controller=controller, data=group),
                     )
 
         except KeyError:
@@ -106,7 +106,7 @@ class ESPSomfySunSwitch(ESPSomfyEntity, SwitchEntity):
                 and "flags" in self._controller.data
             ):
                 self._attr_is_on = bool(
-                    (int(self._controller.data["flags"]) & 0x01) == 0x01
+                    (int(self._controller.data["flags"]) & 0x01) == 0x01,
                 )
                 self.async_write_ha_state()
         elif (
@@ -119,7 +119,7 @@ class ESPSomfySunSwitch(ESPSomfyEntity, SwitchEntity):
                 and "flags" in self._controller.data
             ):
                 self._attr_is_on = bool(
-                    (int(self._controller.data["flags"]) & 0x01) == 0x01
+                    (int(self._controller.data["flags"]) & 0x01) == 0x01,
                 )
                 self.async_write_ha_state()
 

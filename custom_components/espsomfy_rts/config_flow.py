@@ -29,9 +29,9 @@ from .controller import (
 DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_HOST, "Server Address"): TextSelector(
-            TextSelectorConfig(type=TextSelectorType.URL)
-        )
-    }
+            TextSelectorConfig(type=TextSelectorType.URL),
+        ),
+    },
 )
 
 
@@ -97,7 +97,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         "username": user_input.get(CONF_USERNAME, ""),
                         "password": user_input.get(CONF_PASSWORD, ""),
                         "pin": user_input.get(CONF_PIN, ""),
-                    }
+                    },
                 )
                 return self.async_create_entry(
                     title=f"ESPSomfy RTS {api.server_id}",
@@ -115,7 +115,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self._show_setup_form(user_input=user_input, errors=errors)
 
     async def async_step_zeroconf(
-        self, discovery_info: zeroconf.ZeroconfServiceInfo
+        self, discovery_info: zeroconf.ZeroconfServiceInfo,
     ) -> FlowResult:
         """Handle zeroconf discovery."""
         self.zero_conf = discovery_info
@@ -134,12 +134,12 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "server_id": self.server_id,
                     "model": discovery_info.properties.get("model", ""),
                 },
-            }
+            },
         )
         return await self.async_step_zeroconf_confirm()
 
     async def async_step_zeroconf_confirm(
-        self, user_input: dict[str, Any] = None
+        self, user_input: dict[str, Any] = None,
     ) -> FlowResult:
         """Handle a flow initiated by zeroconf."""
         errors = {}
@@ -162,7 +162,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         "username": user_input.get(CONF_USERNAME, ""),
                         "password": user_input.get(CONF_PASSWORD, ""),
                         "pin": user_input.get(CONF_PIN, ""),
-                    }
+                    },
                 )
                 return self.async_create_entry(
                     title=api.deviceName,
@@ -180,7 +180,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="zeroconf_confirm",
             data_schema=_get_data_schema(
-                self.hass, data=data, host=self.zero_conf.host
+                self.hass, data=data, host=self.zero_conf.host,
             ),
             description_placeholders={
                 "server_id": self.zero_conf.properties.get("serverId", ""),
@@ -211,7 +211,7 @@ class ESPSomfyOptionsFlowHandler(config_entries.OptionsFlow):
         )
 
     async def async_step_init(
-        self, user_input: dict[str, Any] | None = None
+        self, user_input: dict[str, Any] | None = None,
     ) -> FlowResult:
         """Configure options for espsomfy_rts."""
         errors = {}
@@ -226,11 +226,11 @@ class ESPSomfyOptionsFlowHandler(config_entries.OptionsFlow):
                         "username": user_input.get(CONF_USERNAME, ""),
                         "password": user_input.get(CONF_PASSWORD, ""),
                         "pin": user_input.get(CONF_PIN, ""),
-                    }
+                    },
                 )
                 # Update config entry with data from user input
                 self.hass.config_entries.async_update_entry(
-                    self._config_entry, title=api.deviceName, data=user_input
+                    self._config_entry, title=api.deviceName, data=user_input,
                 )
                 return self.async_create_entry(
                     title=api.deviceName,
@@ -248,7 +248,7 @@ class ESPSomfyOptionsFlowHandler(config_entries.OptionsFlow):
         return self.async_show_form(
             step_id="init",
             data_schema=_get_data_schema(
-                self.hass, data=self._config_entry.data, host=self._host
+                self.hass, data=self._config_entry.data, host=self._host,
             ),
             errors=errors,
         )
@@ -268,7 +268,7 @@ def _get_data_schema(
                 vol.Optional(CONF_USERNAME, description={"suggested_value": ""}): str,
                 vol.Optional(CONF_PASSWORD, description={"suggested_value": ""}): str,
                 vol.Optional(CONF_PIN, description={"suggested_value": ""}): str,
-            }
+            },
         )
     return vol.Schema(
         {
@@ -285,5 +285,5 @@ def _get_data_schema(
                 CONF_PIN,
                 description={"suggested_value": data.get(CONF_PIN, None)},
             ): str,
-        }
+        },
     )

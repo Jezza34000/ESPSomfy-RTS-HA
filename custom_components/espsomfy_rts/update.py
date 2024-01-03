@@ -117,7 +117,7 @@ class ESPSomfyRTSUpdateEntity(ESPSomfyEntity, UpdateEntity):
         return f"https://github.com/rstrouse/ESPSomfy-RTS/releases/tag/{version}"
 
     async def async_install(
-        self, version: str | None, backup: bool, **kwargs: Any
+        self, version: str | None, backup: bool, **kwargs: Any,
     ) -> None:
         """Install an update."""
         success = True
