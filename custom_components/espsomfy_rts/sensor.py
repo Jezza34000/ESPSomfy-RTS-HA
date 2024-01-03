@@ -2,22 +2,22 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.entity import EntityCategory
 
-
-from .entity import ESPSomfyEntity
-from .controller import ESPSomfyController
-from .const import DOMAIN, EVT_ETHERNET, EVT_WIFISTRENGTH
 from homeassistant.components.sensor import (
-    SensorEntity,
-    SensorStateClass,
     SensorDeviceClass,
+    SensorEntity,
     SensorEntityDescription,
+    SensorStateClass,
 )
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import SIGNAL_STRENGTH_DECIBELS_MILLIWATT, UnitOfDataRate
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity import EntityCategory
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+
+from .const import DOMAIN, EVT_ETHERNET, EVT_WIFISTRENGTH
+from .controller import ESPSomfyController
+from .entity import ESPSomfyEntity
 
 
 @dataclass

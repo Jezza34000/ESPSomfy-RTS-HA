@@ -3,17 +3,14 @@ from __future__ import annotations
 
 from typing import Any
 
+from homeassistant.components.switch import SwitchEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-
-from .entity import ESPSomfyEntity
+from .const import DOMAIN, EVT_CONNECTED, EVT_GROUPSTATE, EVT_SHADESTATE
 from .controller import ESPSomfyController
-from .const import DOMAIN, EVT_SHADESTATE, EVT_GROUPSTATE, EVT_CONNECTED
-
-
-from homeassistant.components.switch import SwitchEntity
+from .entity import ESPSomfyEntity
 
 
 async def async_setup_entry(

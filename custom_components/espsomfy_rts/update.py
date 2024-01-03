@@ -1,5 +1,6 @@
 """Support for ESPSomfy RTS updates."""
 from __future__ import annotations
+
 from typing import Any, cast
 
 from homeassistant.components.update import (

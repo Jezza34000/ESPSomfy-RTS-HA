@@ -4,21 +4,19 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import re
 import threading
 from threading import Timer
 from typing import Any
 
 import aiohttp
 import websocket
-import re
-from packaging.version import Version, parse as version_parse
-
 from homeassistant.components.cover import CoverDeviceClass, CoverEntityFeature
 from homeassistant.const import (
     CONF_HOST,
-    CONF_USERNAME,
     CONF_PASSWORD,
     CONF_PIN,
+    CONF_USERNAME,
     Platform,
 )
 from homeassistant.core import HomeAssistant
@@ -27,28 +25,30 @@ from homeassistant.helpers import aiohttp_client, device_registry, entity_regist
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.entity_registry import async_entries_for_config_entry
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from packaging.version import Version
+from packaging.version import parse as version_parse
 
 from .const import (
-    API_LOGIN,
     API_DISCOVERY,
-    API_SHADECOMMAND,
     API_GROUPCOMMAND,
-    API_TILTCOMMAND,
-    API_SHADES,
     API_GROUPS,
+    API_LOGIN,
     API_SETPOSITIONS,
     API_SETSENSOR,
+    API_SHADECOMMAND,
+    API_SHADES,
+    API_TILTCOMMAND,
     DOMAIN,
     EVT_CONNECTED,
+    EVT_ETHERNET,
+    EVT_FWSTATUS,
+    EVT_GROUPSTATE,
     EVT_SHADEADDED,
+    EVT_SHADECOMMAND,
     EVT_SHADEREMOVED,
     EVT_SHADESTATE,
-    EVT_GROUPSTATE,
-    EVT_SHADECOMMAND,
-    EVT_FWSTATUS,
     EVT_UPDPROGRESS,
     EVT_WIFISTRENGTH,
-    EVT_ETHERNET,
 )
 
 _LOGGER = logging.getLogger(__name__)

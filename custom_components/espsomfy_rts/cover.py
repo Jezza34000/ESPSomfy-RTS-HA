@@ -1,11 +1,10 @@
 """Support for ESPSomfy RTS Shades and Blinds."""
 from __future__ import annotations
 
-from typing import Any, Final
-import voluptuous as vol
 from collections.abc import Mapping
+from typing import Any, Final
 
-from homeassistant.const import ATTR_ENTITY_ID
+import voluptuous as vol
 from homeassistant.components.cover import (
     ATTR_POSITION,
     ATTR_TILT_POSITION,
@@ -14,22 +13,21 @@ from homeassistant.components.cover import (
     CoverEntityFeature,
 )
 from homeassistant.components.group.cover import CoverGroup
-from homeassistant.config_entries import ConfigEntry, ConfigEntries
+from homeassistant.config_entries import ConfigEntries, ConfigEntry
+from homeassistant.const import ATTR_ENTITY_ID
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.config_validation import make_entity_service_schema
 from homeassistant.helpers import entity_platform, entity_registry
-from homeassistant.helpers.entity_registry import async_entries_for_config_entry
-
+from homeassistant.helpers.config_validation import make_entity_service_schema
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity_registry import async_entries_for_config_entry
 from homeassistant.util import dt as dt_util
-
 
 from .const import (
     DOMAIN,
     EVT_CONNECTED,
+    EVT_SHADECOMMAND,
     EVT_SHADEREMOVED,
     EVT_SHADESTATE,
-    EVT_SHADECOMMAND,
 )
 from .controller import ESPSomfyController
 from .entity import ESPSomfyEntity

@@ -4,13 +4,10 @@ from __future__ import annotations
 from typing import Any
 
 import voluptuous as vol
-
 from homeassistant import config_entries
 from homeassistant.components import zeroconf
-from homeassistant.const import CONF_HOST, CONF_USERNAME, CONF_PASSWORD, CONF_PIN
+from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_PIN, CONF_USERNAME
 from homeassistant.core import HomeAssistant, callback
-
-
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers import aiohttp_client
 from homeassistant.helpers.selector import (

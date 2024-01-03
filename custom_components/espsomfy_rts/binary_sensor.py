@@ -1,18 +1,14 @@
 """Binary sensors related to ESPSomfy-RTS-HA"""
 from __future__ import annotations
 
-
+from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-
-from .entity import ESPSomfyEntity
+from .const import DOMAIN, EVT_CONNECTED, EVT_GROUPSTATE, EVT_SHADESTATE
 from .controller import ESPSomfyController
-from .const import DOMAIN, EVT_SHADESTATE, EVT_GROUPSTATE, EVT_CONNECTED
-
-
-from homeassistant.components.binary_sensor import BinarySensorEntity
+from .entity import ESPSomfyEntity
 
 
 async def async_setup_entry(
