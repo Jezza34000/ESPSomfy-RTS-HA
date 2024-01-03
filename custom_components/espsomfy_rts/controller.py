@@ -113,7 +113,7 @@ class SocketListener(threading.Thread):
 
     def reconnect(self):
         """Reconnect to the web socket"""
-        if(self._connect_timer != None):
+        if self._connect_timer != None:
             self._connect_timer.cancel()
         self.reconnects = self.reconnects + 1
         self.main_loop = asyncio.get_event_loop()
@@ -130,13 +130,19 @@ class SocketListener(threading.Thread):
             self._connect_timer = None
             self.connected = True
         except websocket.WebSocketAddressException:
-            self._connect_timer = Timer(min(10 * self.reconnects / 2, 20), self.reconnect)
+            self._connect_timer = Timer(
+                min(10 * self.reconnects / 2, 20), self.reconnect
+            )
             self._connect_timer.start()
         except websocket.WebSocketTimeoutException:
-            self._connect_timer = Timer(min(10 * self.reconnects / 2, 20), self.reconnect)
+            self._connect_timer = Timer(
+                min(10 * self.reconnects / 2, 20), self.reconnect
+            )
             self._connect_timer.start()
         except websocket.WebSocketConnectionClosedException:
-            self._connect_timer = Timer(min(10 * self.reconnects / 2, 20), self.reconnect)
+            self._connect_timer = Timer(
+                min(10 * self.reconnects / 2, 20), self.reconnect
+            )
             self._connect_timer.start()
 
     def set_filter(self, arr: Any) -> None:
@@ -165,6 +171,7 @@ class SocketListener(threading.Thread):
         self.connected = False
         if not self._should_stop:
             self.hass.loop.call_soon_threadsafe(self.onclose)
+
     def ws_onopen(self, wsapp):
         """The socket was opened"""
         self.connected = True
@@ -252,9 +259,21 @@ class ESPSomfyController(DataUpdateCoordinator):
             self.ws_onerror,
         )
         self.ws_listener.set_filter(
-            [EVT_CONNECTED, EVT_SHADEADDED, EVT_SHADEREMOVED, EVT_SHADESTATE, EVT_SHADECOMMAND, EVT_GROUPSTATE, EVT_FWSTATUS, EVT_UPDPROGRESS, EVT_WIFISTRENGTH, EVT_ETHERNET]
+            [
+                EVT_CONNECTED,
+                EVT_SHADEADDED,
+                EVT_SHADEREMOVED,
+                EVT_SHADESTATE,
+                EVT_SHADECOMMAND,
+                EVT_GROUPSTATE,
+                EVT_FWSTATUS,
+                EVT_UPDPROGRESS,
+                EVT_WIFISTRENGTH,
+                EVT_ETHERNET,
+            ]
         )
         await self.ws_listener.connect()
+
     async def create_backup(self) -> bool:
         return await self.api.create_backup()
 
@@ -468,6 +487,7 @@ class ESPSomfyAPI:
     def get_config(self):
         """Return the initial config"""
         return self._config
+
     def get_data(self):
         """Return the internal data"""
         return self.data
@@ -492,16 +512,19 @@ class ESPSomfyAPI:
 
         self._config["version"] = new_ver
         v = version_parse(new_ver)
-        if (v.major > 2) or (v.major == 2 and v.minor > 2) or (v.major == 2 and v.minor == 2 and v.micro > 0):
+        if (
+            (v.major > 2)
+            or (v.major == 2 and v.minor > 2)
+            or (v.major == 2 and v.minor == 2 and v.micro > 0)
+        ):
             self._can_update = True
         else:
             self._can_update = False
 
-
     async def update_firmware(self, version) -> bool:
         url = f"{self._api_url}/downloadFirmware?ver={version}"
         async with self._session.get(url, headers=self._headers) as resp:
-            if(resp.status == 200):
+            if resp.status == 200:
                 return True
             else:
                 _LOGGER.error(await resp.text())
@@ -511,9 +534,9 @@ class ESPSomfyAPI:
         """Gets a backup"""
         url = f"{self._api_url}/backup?attach=true"
         async with self._session.get(url, headers=self._headers) as resp:
-            if  resp.status == 200:
+            if resp.status == 200:
                 hdr = resp.headers.get("Content-Disposition")
-                fname = re.findall('filename=\"(.+)\"', hdr)[0]
+                fname = re.findall('filename="(.+)"', hdr)[0]
                 data = await resp.text()
                 fpath = self.hass.config.path(f"{fname}")
                 f = open(file=fpath, mode="wb+")
@@ -618,7 +641,7 @@ class ESPSomfyAPI:
 
     async def stop_shade(self, shade_id: int):
         """Send the command to stop the shade"""
-        #print(f"STOP ShadeId:{shade_id}")
+        # print(f"STOP ShadeId:{shade_id}")
         await self.shade_command({"shadeId": shade_id, "command": "my"})
 
     async def open_group(self, group_id: int):
@@ -631,12 +654,12 @@ class ESPSomfyAPI:
 
     async def stop_group(self, group_id: int):
         """Send the command to stop the group"""
-        #print(f"STOP GroupId:{group_id}")
+        # print(f"STOP GroupId:{group_id}")
         await self.group_command({"groupId": group_id, "command": "my"})
 
     async def position_shade(self, shade_id: int, position: int):
         """Send the command to position the shade"""
-        #print(f"POS ShadeId:{shade_id} Target:{position}")
+        # print(f"POS ShadeId:{shade_id} Target:{position}")
         await self.shade_command({"shadeId": shade_id, "target": position})
 
     async def raw_command(self, shade_id: int, command: str):
@@ -647,27 +670,29 @@ class ESPSomfyAPI:
         """Send commands to ESPSomfyRTS via PUT request"""
         await self.put_command(API_SHADECOMMAND, data)
 
-    async def set_current_position(self, shade_id:int, position:int):
+    async def set_current_position(self, shade_id: int, position: int):
         """Sets the current position without moving the motor"""
-        await self.put_command(API_SETPOSITIONS, {"shadeId": shade_id, "position": position})
+        await self.put_command(
+            API_SETPOSITIONS, {"shadeId": shade_id, "position": position}
+        )
 
-    async def set_current_tilt_position(self, shade_id: int, tilt_position:int):
+    async def set_current_tilt_position(self, shade_id: int, tilt_position: int):
         """Sets the current position without moving the motor"""
-        await self.put_command(API_SETPOSITIONS, {"shadeId": shade_id, "tiltPosition": tilt_position})
+        await self.put_command(
+            API_SETPOSITIONS, {"shadeId": shade_id, "tiltPosition": tilt_position}
+        )
 
-    async def set_sunny(self, shade_id:int, sunny:bool):
+    async def set_sunny(self, shade_id: int, sunny: bool):
         """Set the sunny condition for the motor"""
         await self.put_command(API_SETSENSOR, {"shadeId": shade_id, "sunny": sunny})
 
-    async def set_windy(self, shade_id:int, windy:bool):
+    async def set_windy(self, shade_id: int, windy: bool):
         """Set the windy condition for the motor"""
         await self.put_command(API_SETSENSOR, {"shadeId": shade_id, "windy": windy})
 
-
     async def put_command(self, command, data):
         """Sends a put command to the device"""
-        async with self._session.put(
-            f"{self._api_url}{command}", json=data) as resp:
+        async with self._session.put(f"{self._api_url}{command}", json=data) as resp:
             if resp.status == 200:
                 pass
             else:

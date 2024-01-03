@@ -14,6 +14,7 @@ from .const import DOMAIN, EVT_SHADESTATE, EVT_GROUPSTATE, EVT_CONNECTED
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
 
+
 async def async_setup_entry(
     hass: HomeAssistant,
     config_entry: ConfigEntry,
@@ -29,7 +30,7 @@ async def async_setup_entry(
                     new_entities.append(ESPSomfySunSensor(controller, shade))
                     new_entities.append(ESPSomfyWindSensor(controller, shade))
             elif "shadeType" in shade:
-                match(shade["shadeType"]):
+                match (shade["shadeType"]):
                     case 3:
                         new_entities.append(ESPSomfySunSensor(controller, shade))
                         new_entities.append(ESPSomfyWindSensor(controller, shade))
@@ -75,25 +76,34 @@ class ESPSomfySunSensor(ESPSomfyEntity, BinarySensorEntity):
 
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        if(self._controller.data["event"] == EVT_CONNECTED and "connected" in self._controller.data):
+        if (
+            self._controller.data["event"] == EVT_CONNECTED
+            and "connected" in self._controller.data
+        ):
             self._available = bool(self._controller.data["connected"])
             self.async_write_ha_state()
-        elif(self._sensor_type == "motor"
-           and "shadeId" in self._controller.data
-           and self._controller.data["shadeId"] == self._shade_id
-           and self._controller.data["event"] == EVT_SHADESTATE
-           and "flags" in self._controller.data):
-            self._attr_is_on = bool((int(self._controller.data["flags"]) & 0x20) == 0x20)
+        elif (
+            self._sensor_type == "motor"
+            and "shadeId" in self._controller.data
+            and self._controller.data["shadeId"] == self._shade_id
+            and self._controller.data["event"] == EVT_SHADESTATE
+            and "flags" in self._controller.data
+        ):
+            self._attr_is_on = bool(
+                (int(self._controller.data["flags"]) & 0x20) == 0x20
+            )
             self.async_write_ha_state()
-        elif(
+        elif (
             self._sensor_type == "group"
-           and "groupId" in self._controller.data
-           and self._controller.data["groupId"] == self._group_id
-           and self._controller.data["event"] == EVT_GROUPSTATE
-           and "flags" in self._controller.data):
-            self._attr_is_on = bool((int(self._controller.data["flags"]) & 0x20) == 0x20)
+            and "groupId" in self._controller.data
+            and self._controller.data["groupId"] == self._group_id
+            and self._controller.data["event"] == EVT_GROUPSTATE
+            and "flags" in self._controller.data
+        ):
+            self._attr_is_on = bool(
+                (int(self._controller.data["flags"]) & 0x20) == 0x20
+            )
             self.async_write_ha_state()
-
 
     @property
     def icon(self) -> str:
@@ -135,23 +145,33 @@ class ESPSomfyWindSensor(ESPSomfyEntity, BinarySensorEntity):
 
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        if(self._controller.data["event"] == EVT_CONNECTED and "connected" in self._controller.data):
+        if (
+            self._controller.data["event"] == EVT_CONNECTED
+            and "connected" in self._controller.data
+        ):
             self._available = bool(self._controller.data["connected"])
             self.async_write_ha_state()
-        elif(self._sensor_type == "motor"
-           and "shadeId" in self._controller.data
-           and self._controller.data["shadeId"] == self._shade_id
-           and self._controller.data["event"] == EVT_SHADESTATE
-           and "flags" in self._controller.data):
-            self._attr_is_on = bool((int(self._controller.data["flags"]) & 0x10) == 0x10)
+        elif (
+            self._sensor_type == "motor"
+            and "shadeId" in self._controller.data
+            and self._controller.data["shadeId"] == self._shade_id
+            and self._controller.data["event"] == EVT_SHADESTATE
+            and "flags" in self._controller.data
+        ):
+            self._attr_is_on = bool(
+                (int(self._controller.data["flags"]) & 0x10) == 0x10
+            )
             self.async_write_ha_state()
-        elif(
+        elif (
             self._sensor_type == "group"
-           and "groupId" in self._controller.data
-           and self._controller.data["groupId"] == self._group_id
-           and self._controller.data["event"] == EVT_GROUPSTATE
-           and "flags" in self._controller.data):
-            self._attr_is_on = bool((int(self._controller.data["flags"]) & 0x10) == 0x10)
+            and "groupId" in self._controller.data
+            and self._controller.data["groupId"] == self._group_id
+            and self._controller.data["event"] == EVT_GROUPSTATE
+            and "flags" in self._controller.data
+        ):
+            self._attr_is_on = bool(
+                (int(self._controller.data["flags"]) & 0x10) == 0x10
+            )
             self.async_write_ha_state()
 
     @property

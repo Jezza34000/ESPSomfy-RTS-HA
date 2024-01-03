@@ -17,18 +17,16 @@ from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntityDescription,
 )
-from homeassistant.const import (
-    SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
-    UnitOfDataRate
+from homeassistant.const import SIGNAL_STRENGTH_DECIBELS_MILLIWATT, UnitOfDataRate
 
-)
 
 @dataclass
 class ESPSomfyDiagSensorDescription(SensorEntityDescription):
     """A base class descriptor for a sensor entity"""
+
     id: str | None = None
-    events:dict | None = None
-    native_value:any | None = None
+    events: dict | None = None
+    native_value: any | None = None
 
 
 async def async_setup_entry(
@@ -41,72 +39,126 @@ async def async_setup_entry(
     controller = hass.data[DOMAIN][config_entry.entry_id]
     new_entities = []
     cfg = controller.api.get_config()
-    if("chipModel" in cfg):
+    if "chipModel" in cfg:
         chip_model = "ESP32"
-        if(len(cfg["chipModel"])):
+        if len(cfg["chipModel"]):
             chip_model += "-"
             chip_model += cfg["chipModel"]
-        new_entities.append(ESPSomfyDiagSensor(controller=controller, cfg=ESPSomfyDiagSensorDescription(
-            key="chip_model",
-            entity_category=EntityCategory.DIAGNOSTIC,
-            name="Chip Type",
-            native_value=chip_model.upper(),
-            events={},
-            icon="mdi:cpu-32-bit"), data=cfg))
-    if("connType" in cfg):
-        new_entities.append(ESPSomfyDiagSensor(controller=controller, cfg=ESPSomfyDiagSensorDescription(
-            key="conn_type",
-            entity_category=EntityCategory.DIAGNOSTIC,
-            name="Connection",
-            events={},
-            native_value=cfg["connType"],
-            icon="mdi:connection"), data=cfg))
-        if(cfg["connType"] == "Wifi"):
-            new_entities.append(ESPSomfyWifiStrengthSensor(controller, controller.api.get_config()))
-            new_entities.append(ESPSomfyDiagSensor(controller=controller, cfg=ESPSomfyDiagSensorDescription(
-                key="wifi_ssid",
-                entity_category=EntityCategory.DIAGNOSTIC,
-                name="Wifi SSID",
-                icon="mdi:wifi-cog",
-                events={EVT_WIFISTRENGTH: "ssid"}), data=controller.api.get_config()))
-            new_entities.append(ESPSomfyDiagSensor(controller=controller, cfg=ESPSomfyDiagSensorDescription(
-                    key="wifi_channel",
+        new_entities.append(
+            ESPSomfyDiagSensor(
+                controller=controller,
+                cfg=ESPSomfyDiagSensorDescription(
+                    key="chip_model",
                     entity_category=EntityCategory.DIAGNOSTIC,
-                    state_class=SensorStateClass.MEASUREMENT,
-                    name="Wifi Channel",
-                    icon="mdi:radio-tower",
-                    events={EVT_WIFISTRENGTH: "channel"}), data=controller.api.get_config()))
-        elif(cfg["connType"] == "Ethernet"):
-            new_entities.append(ESPSomfyDiagSensor(controller=controller, cfg=ESPSomfyDiagSensorDescription(
-                key="eth_speed",
-                entity_category=EntityCategory.DIAGNOSTIC,
-                state_class=SensorStateClass.MEASUREMENT,
-                unit_of_measurement=UnitOfDataRate.MEGABYTES_PER_SECOND,
-                name="Connection Speed",
-                icon="mdi:lan-connect",
-                events={EVT_ETHERNET: "speed"}), data=controller.api.get_config()))
-            new_entities.append(ESPSomfyDiagSensor(controller=controller, cfg=ESPSomfyDiagSensorDescription(
-                key="eth_full_duplex",
-                entity_category=EntityCategory.DIAGNOSTIC,
-                name="Full Duplex",
-                icon="mdi:sync",
-                events={EVT_ETHERNET: "fullduplex"}), data=controller.api.get_config()))
+                    name="Chip Type",
+                    native_value=chip_model.upper(),
+                    events={},
+                    icon="mdi:cpu-32-bit",
+                ),
+                data=cfg,
+            )
+        )
+    if "connType" in cfg:
+        new_entities.append(
+            ESPSomfyDiagSensor(
+                controller=controller,
+                cfg=ESPSomfyDiagSensorDescription(
+                    key="conn_type",
+                    entity_category=EntityCategory.DIAGNOSTIC,
+                    name="Connection",
+                    events={},
+                    native_value=cfg["connType"],
+                    icon="mdi:connection",
+                ),
+                data=cfg,
+            )
+        )
+        if cfg["connType"] == "Wifi":
+            new_entities.append(
+                ESPSomfyWifiStrengthSensor(controller, controller.api.get_config())
+            )
+            new_entities.append(
+                ESPSomfyDiagSensor(
+                    controller=controller,
+                    cfg=ESPSomfyDiagSensorDescription(
+                        key="wifi_ssid",
+                        entity_category=EntityCategory.DIAGNOSTIC,
+                        name="Wifi SSID",
+                        icon="mdi:wifi-cog",
+                        events={EVT_WIFISTRENGTH: "ssid"},
+                    ),
+                    data=controller.api.get_config(),
+                )
+            )
+            new_entities.append(
+                ESPSomfyDiagSensor(
+                    controller=controller,
+                    cfg=ESPSomfyDiagSensorDescription(
+                        key="wifi_channel",
+                        entity_category=EntityCategory.DIAGNOSTIC,
+                        state_class=SensorStateClass.MEASUREMENT,
+                        name="Wifi Channel",
+                        icon="mdi:radio-tower",
+                        events={EVT_WIFISTRENGTH: "channel"},
+                    ),
+                    data=controller.api.get_config(),
+                )
+            )
+        elif cfg["connType"] == "Ethernet":
+            new_entities.append(
+                ESPSomfyDiagSensor(
+                    controller=controller,
+                    cfg=ESPSomfyDiagSensorDescription(
+                        key="eth_speed",
+                        entity_category=EntityCategory.DIAGNOSTIC,
+                        state_class=SensorStateClass.MEASUREMENT,
+                        unit_of_measurement=UnitOfDataRate.MEGABYTES_PER_SECOND,
+                        name="Connection Speed",
+                        icon="mdi:lan-connect",
+                        events={EVT_ETHERNET: "speed"},
+                    ),
+                    data=controller.api.get_config(),
+                )
+            )
+            new_entities.append(
+                ESPSomfyDiagSensor(
+                    controller=controller,
+                    cfg=ESPSomfyDiagSensorDescription(
+                        key="eth_full_duplex",
+                        entity_category=EntityCategory.DIAGNOSTIC,
+                        name="Full Duplex",
+                        icon="mdi:sync",
+                        events={EVT_ETHERNET: "fullduplex"},
+                    ),
+                    data=controller.api.get_config(),
+                )
+            )
 
-
-    new_entities.append(ESPSomfyDiagSensor(controller=controller, cfg=ESPSomfyDiagSensorDescription(
-            key="ip_addresss",
-            entity_category=EntityCategory.DIAGNOSTIC,
-            name="IP Address",
-            icon="mdi:ip",
-            events={},
-            native_value=controller.api.get_data()["host"]), data=controller.api.get_config()))
+    new_entities.append(
+        ESPSomfyDiagSensor(
+            controller=controller,
+            cfg=ESPSomfyDiagSensorDescription(
+                key="ip_addresss",
+                entity_category=EntityCategory.DIAGNOSTIC,
+                name="IP Address",
+                icon="mdi:ip",
+                events={},
+                native_value=controller.api.get_data()["host"],
+            ),
+            data=controller.api.get_config(),
+        )
+    )
 
     if new_entities:
         async_add_entities(new_entities)
 
+
 class ESPSomfyDiagSensor(ESPSomfyEntity, SensorEntity):
     """A diagnostic entity for the hub"""
-    def __init__(self, controller: ESPSomfyController, cfg: ESPSomfyDiagSensorDescription, data) -> None:
+
+    def __init__(
+        self, controller: ESPSomfyController, cfg: ESPSomfyDiagSensorDescription, data
+    ) -> None:
         super().__init__(controller=controller, data=data)
         self._controller = controller
         self._available = True
@@ -124,9 +176,12 @@ class ESPSomfyDiagSensor(ESPSomfyEntity, SensorEntity):
 
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator"""
-        if("event" in self._controller.data and self._controller.data["event"] in self.events):
+        if (
+            "event" in self._controller.data
+            and self._controller.data["event"] in self.events
+        ):
             evt = self.events[self._controller.data["event"]]
-            if(evt in self._controller.data):
+            if evt in self._controller.data:
                 self._attr_native_value = self._controller.data[evt]
                 self.async_write_ha_state()
 
@@ -145,22 +200,25 @@ class ESPSomfyWifiStrengthSensor(ESPSomfyDiagSensor):
 
     def __init__(self, controller: ESPSomfyController, data) -> None:
         """Initialize a new SunSensor"""
-        super().__init__(controller=controller, cfg=ESPSomfyDiagSensorDescription(
-            key="wifi_sensor",
-            device_class=SensorDeviceClass.SIGNAL_STRENGTH,
-            entity_category=EntityCategory.DIAGNOSTIC,
-            unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
-            state_class=SensorStateClass.MEASUREMENT,
-            name="Wifi Strength",
-            icon="mdi:wifi",
-            events={EVT_WIFISTRENGTH: "strength"}
-        ), data=data)
+        super().__init__(
+            controller=controller,
+            cfg=ESPSomfyDiagSensorDescription(
+                key="wifi_sensor",
+                device_class=SensorDeviceClass.SIGNAL_STRENGTH,
+                entity_category=EntityCategory.DIAGNOSTIC,
+                unit_of_measurement=SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+                state_class=SensorStateClass.MEASUREMENT,
+                name="Wifi Strength",
+                icon="mdi:wifi",
+                events={EVT_WIFISTRENGTH: "strength"},
+            ),
+            data=data,
+        )
         self._available = True
 
     @property
     def should_poll(self) -> bool:
         return False
-
 
 
 #    def _handle_coordinator_update(self) -> None:
@@ -174,5 +232,3 @@ class ESPSomfyWifiStrengthSensor(ESPSomfyDiagSensor):
 #    @property
 #    def icon(self) -> str:
 #        return "mdi:wifi"
-
-

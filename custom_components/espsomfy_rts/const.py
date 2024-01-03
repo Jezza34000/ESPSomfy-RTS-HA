@@ -23,4 +23,3 @@ EVT_FWSTATUS = "fwStatus"
 EVT_UPDPROGRESS = "updateProgress"
 EVT_WIFISTRENGTH = "wifiStrength"
 EVT_ETHERNET = "ethernet"
-

@@ -29,5 +29,5 @@ class ESPSomfyEntity(CoordinatorEntity[ESPSomfyController], Entity):
             manufacturer=MANUFACTURER,
             model=f"ESPSomfy RTS Integration {VERSION}",
             sw_version=self.controller.version,
-            hw_version=None
+            hw_version=None,
         )

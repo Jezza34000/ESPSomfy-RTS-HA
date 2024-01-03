@@ -1,4 +1,4 @@
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration) 
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=rstrouse&repository=espsomfy-rts-ha)
 # ESPSomfy RTS-HA <image src="https://user-images.githubusercontent.com/47839015/218900217-81f88955-67b8-4ed8-8e97-271de66c555e.png" align="right" style="margin-top:-2em;width:177px;margin-right:2em;display:inline-block;float:right;"></image>
@@ -48,11 +48,6 @@ The data payload for the event includes:
   * `My+Down` - A combination of the my and down button was pressed at the same time
   * `Up+Down` - The up and down buttons were pressed at the same time
   * `My+Up+Down` - The my, up, and down buttons were all pressed at the same time
-  
+
 
 ![image](https://github.com/rstrouse/ESPSomfy-RTS-HA/assets/47839015/2fbf4ad8-86b4-4d4e-ac8e-ce04ba4adeeb)
-
-
-
-
-

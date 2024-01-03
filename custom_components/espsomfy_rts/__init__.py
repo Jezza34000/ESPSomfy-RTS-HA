@@ -15,7 +15,7 @@ PLATFORMS: list[Platform] = [
     Platform.COVER,
     Platform.SWITCH,
     Platform.UPDATE,
-    Platform.SENSOR
+    Platform.SENSOR,
 ]
 
 

@@ -170,5 +170,3 @@ send_command:
               - "Flag"
               - "SunFlag"
           mode: dropdown
-
-
